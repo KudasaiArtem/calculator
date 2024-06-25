@@ -42,7 +42,7 @@ class MATH {
         }
 
         console.log("Приклад", expression);
-        console.log(currentNum);
+        console.log("currentNum = ", currentNum);
     }
 
     static plus() {
@@ -72,8 +72,13 @@ class MATH {
     static radical() {
         nextAction = true;
         let radical = Math.sqrt(parseFloat(currentNum));
+
+        expression = expression.slice(0, -1*currentNum.length);
+
+        expression += parseInt(radical);
         currentNum = "";
 
+        console.log(expression);
         console.log(radical);
     }
 
