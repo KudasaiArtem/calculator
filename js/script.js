@@ -1,5 +1,5 @@
-let numpad = document.querySelectorAll(".num");
-
+const numpad = document.querySelectorAll(".num");
+const btnBlock = document.querySelector(".button_block");
 console.log(numpad);
 
 // operators
@@ -17,7 +17,7 @@ const radical = document.querySelector("#radical");
 const equals = document.querySelector("#equals");
 
 // result
-let result = document.querySelector("#result");
+let expressionUI = document.querySelector("#expression");
 
 
 let value;
@@ -46,27 +46,53 @@ class MATH {
     }
 
     static plus() {
+        if (nextAction === false) {
+            expression += "+";
+        } else if (nextAction) {
+            expression = expression.slice(0, -1);
+            expression += "+";
+        }
+
         nextAction = true;
         currentNum = "";
-        expression += "+";
     }
 
     static minus() {
+        let isMinus = expression.slice(-1);
+
+        if (isMinus != "-") {
+            expression += "-";
+        } else if (nextAction) {
+            expression = expression.slice(0, -1);
+            expression += "-";
+        }
+
         nextAction = true;
         currentNum = "";
-        expression += "-";
     }
 
     static multiply() {
+        if (nextAction === false) {
+            expression += "*";
+        } else if (nextAction) {
+            expression = expression.slice(0, -1);
+            expression += "*";
+        }
+
         nextAction = true;
         currentNum = "";
-        expression += "*";
     }
 
     static divide() {
+        if (nextAction === false) {
+            expression += "/";
+        } else if (nextAction) {
+            expression = expression.slice(0, -1);
+            expression += "/";
+        }
+
         nextAction = true;
         currentNum = "";
-        expression += "/"
     }
 
     static radical() {
@@ -75,7 +101,7 @@ class MATH {
 
         expression = expression.slice(0, -1*currentNum.length);
 
-        expression += parseInt(radical);
+        expression += parseFloat(radical);
         currentNum = "";
 
         console.log(expression);
@@ -85,12 +111,36 @@ class MATH {
     static equals() {
         let result = eval(expression);
         // expression = "";
-        expression = result;
+        expression = `${result}`;
 
         console.log(result);
     }
 }
 
+class CLEAR {
+    static last() {
+        expression = expression.slice(0, -1);
+    }
+
+    static all() {
+        expression = "";
+    }
+}
+
+class UI {
+    static showExpression() {
+        let replaced = expression.replace(/\*/g, " x ")
+                                .replace(/\//g, " : ")
+                                .replace(/\+/g, " + ")
+                                .replace(/\-/g, " - ");
+
+        expressionUI.innerHTML = `<span>${replaced}</span>`;
+    }
+
+    static cleanUp() {
+
+    }
+}
 
 // events
 plus.addEventListener("click", () => {
@@ -117,4 +167,16 @@ equals.addEventListener("click", () => {
     MATH.equals();
 
     // result.innerHTML = `<span>${value}</span>`
+})
+
+clearAll.addEventListener("click", () => {
+    CLEAR.all();
+})
+
+backspace.addEventListener("click", () => {
+    CLEAR.last();
+})
+
+btnBlock.addEventListener("click", () => {
+    UI.showExpression();
 })
