@@ -32,13 +32,30 @@ let expression = "";
 let currentNum = "";
 let nextAction = false;
 
+let isFirstZero;
+let isResultZero;
+
 class MATH {
     static currentNum(number) {
-        expression += number;
         nextAction = false;
 
-        if (nextAction === false) {
+        if (number == "0") {
             currentNum += number;
+        } else if (number != "0") {
+            isFirstZero = currentNum.slice(0, 1);
+            currentNum += number;
+            // isResultZero = expression.slice(0, -1);
+        }
+
+
+        if (isFirstZero !== "0" && isResultZero != "0") {
+            expression += number;
+        } else if (isFirstZero == "0") {
+            console.log("isResultZero");
+            expression = expression.slice(0, -1) + number;
+        } else if (isResultZero == "0") {
+            expression = number;
+            isResultZero = expression;
         }
 
         console.log("Приклад", expression);
@@ -96,22 +113,69 @@ class MATH {
     }
 
     static radical() {
-        nextAction = true;
-        let radical = Math.sqrt(parseFloat(currentNum));
+        console.log("поточний номер", currentNum);
+        if (currentNum >= 0) {
+            nextAction = false;
 
-        expression = expression.slice(0, -1*currentNum.length);
+            let radical = Math.sqrt(parseFloat(currentNum));
 
-        expression += parseFloat(radical);
-        currentNum = "";
+            expression = expression.slice(0, -1*currentNum.length);
 
-        console.log(expression);
-        console.log(radical);
+            expression += parseFloat(radical);
+            currentNum = parseInt(radical);
+
+            console.log(expression);
+            console.log(radical);
+        }
     }
+
+    // static radical() {
+    //     console.log("поточний номер", currentNum);
+    //     try {
+    //         if (currentNum && !isNaN(currentNum)) {
+    //             nextAction = true;
+    
+    //             // Перевірка на негативні числа
+    //             if (parseFloat(currentNum) < 0) {
+    //                 console.error("Неможливо обчислити корінь з негативного числа");
+    //                 return;
+    //             }
+    
+    //             // Обчислення квадратного кореня
+    //             let radicalValue = Math.sqrt(parseFloat(currentNum));
+    
+    //             // Оновлення виразу, замінивши поточне число на його корінь
+    //             expression = expression.slice(0, -currentNum.length) + radicalValue;
+                
+    //             // Очищення поточного числа та оновлення його значенням кореня
+    //             currentNum = `${radicalValue}`;
+                
+    //             // Оновлення UI
+    //             UI.showExpression();
+    
+    //             console.log("оновлений вираз:", expression);
+    //             console.log("значення кореня:", radicalValue);
+    //         } else {
+    //             console.error("Поточне число відсутнє або не є числом");
+    //         }
+    //     } catch (error) {
+    //         console.error("Сталася помилка під час обчислення кореня:", error);
+    //     }
+    // }
+    
 
     static equals() {
         let result = eval(expression);
         // expression = "";
         expression = `${result}`;
+        currentNum = `${result}`;
+
+        if (expression == 0) {
+            isResultZero = expression;
+            console.log("zero!");
+        } else {
+            isResultZero = expression;
+        }
 
         console.log(result);
     }
@@ -120,11 +184,20 @@ class MATH {
 class CLEAR {
     static last() {
         expression = expression.slice(0, -1);
+        currentNum = currentNum.slice(0, -1);
+        isFirstZero = false;
+        isResultZero = false;
+        nextAction = false;
     }
 
     static all() {
         expression = "";
-    }
+        currentNum = "";
+        isFirstZero = false;
+        isResultZero = false;
+    UI.showExpression();
+}
+
 }
 
 class UI {
