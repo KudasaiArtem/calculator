@@ -32,35 +32,98 @@ let expression = "";
 let currentNum = "";
 let nextAction = false;
 
-let isFirstZero;
-let isResultZero;
+let isFirstZero = false;
+let isResultZero = false;
 
 class MATH {
+    // static currentNum(number) {
+    //     nextAction = false;
+
+    //     if (number == "0") {
+    //         currentNum += number;
+    //     } else if (number != "0") {
+    //         isFirstZero = currentNum.slice(0, 1);
+    //         currentNum += number;
+    //     }
+
+
+    //     if (isFirstZero !== "0" && isResultZero != "0") {
+    //         expression += number;
+
+    //     } else if (isFirstZero == "0") {
+    //         console.log("isResultZero");
+    //         expression = expression.slice(0, -1) + number;
+
+    //     } else if (isResultZero == "0") {
+    //         expression = number;
+    //         isResultZero = expression;
+    //     }
+
+    //     console.log("Приклад", expression);
+    //     console.log("currentNum = ", currentNum);
+    // }
+
     static currentNum(number) {
         nextAction = false;
 
         if (number == "0") {
             currentNum += number;
-        } else if (number != "0") {
-            isFirstZero = currentNum.slice(0, 1);
-            currentNum += number;
-            // isResultZero = expression.slice(0, -1);
-        }
-
-
-        if (isFirstZero !== "0" && isResultZero != "0") {
             expression += number;
-        } else if (isFirstZero == "0") {
-            console.log("isResultZero");
-            expression = expression.slice(0, -1) + number;
-        } else if (isResultZero == "0") {
-            expression = number;
-            isResultZero = expression;
+            // isFirstZero = true;
+
+        } else if (number != "0") {
+            isFirstZero = currentNum.slice(0, 1) === "0";
+            currentNum += number;
+            console.log("isFirstZero", isFirstZero);
+
+            if (isFirstZero === true) {
+                expression = expression.slice(0, -1) + number;
+                currentNum = number;
+                isFirstZero = false;
+                console.log(isFirstZero);
+
+            } else if (isFirstZero === false) {
+                expression += number;
+            } 
         }
 
-        console.log("Приклад", expression);
-        console.log("currentNum = ", currentNum);
+
+        // if (isFirstZero !== "0" && isResultZero != "0") {
+        //     expression += number;
+
+        // } else if (isResultZero == "0") {
+        //     expression = number;
+        //     isResultZero = expression;
+        // }
+
+        // console.log("Приклад", expression);
+        // console.log("currentNum = ", currentNum);
     }
+
+    // static currentNum(number) {
+    //     nextAction = false;
+        
+    //     // Додаємо число до поточного числа
+    //     currentNum += number;
+    
+    //     // Отримуємо перший символ поточного числа
+    //     const isFirstZero = currentNum.charAt(0);
+    
+    //     // Перевіряємо чи є перший символ нулем
+    //     if (isFirstZero === "0") {
+    //         if (number !== "0") {
+    //             // Заміна початкового нуля на нове число
+    //             expression = number;
+    //         }
+    //         // Якщо число 0 і перший символ 0, додаємо 0 до числа
+    //         else {
+    //             expression += number;
+    //         }
+    //     } else {
+    //         // Додаємо нове число до виразу
+    //         expression += number;
+    //     }
+    // }
 
     static plus() {
         if (nextAction === false) {
@@ -122,46 +185,13 @@ class MATH {
             expression = expression.slice(0, -1*currentNum.length);
 
             expression += parseFloat(radical);
-            currentNum = parseInt(radical);
+            currentNum = `${radical}`;
+            console.log(currentNum);
 
             console.log(expression);
             console.log(radical);
         }
     }
-
-    // static radical() {
-    //     console.log("поточний номер", currentNum);
-    //     try {
-    //         if (currentNum && !isNaN(currentNum)) {
-    //             nextAction = true;
-    
-    //             // Перевірка на негативні числа
-    //             if (parseFloat(currentNum) < 0) {
-    //                 console.error("Неможливо обчислити корінь з негативного числа");
-    //                 return;
-    //             }
-    
-    //             // Обчислення квадратного кореня
-    //             let radicalValue = Math.sqrt(parseFloat(currentNum));
-    
-    //             // Оновлення виразу, замінивши поточне число на його корінь
-    //             expression = expression.slice(0, -currentNum.length) + radicalValue;
-                
-    //             // Очищення поточного числа та оновлення його значенням кореня
-    //             currentNum = `${radicalValue}`;
-                
-    //             // Оновлення UI
-    //             UI.showExpression();
-    
-    //             console.log("оновлений вираз:", expression);
-    //             console.log("значення кореня:", radicalValue);
-    //         } else {
-    //             console.error("Поточне число відсутнє або не є числом");
-    //         }
-    //     } catch (error) {
-    //         console.error("Сталася помилка під час обчислення кореня:", error);
-    //     }
-    // }
     
 
     static equals() {
@@ -170,11 +200,14 @@ class MATH {
         expression = `${result}`;
         currentNum = `${result}`;
 
-        if (expression == 0) {
-            isResultZero = expression;
-            console.log("zero!");
-        } else {
-            isResultZero = expression;
+        switch (result) {
+            case 0:
+                isFirstZero = true;
+                break;
+        
+            default:
+                isFirstZero = false;
+                break;
         }
 
         console.log(result);
@@ -185,17 +218,15 @@ class CLEAR {
     static last() {
         expression = expression.slice(0, -1);
         currentNum = currentNum.slice(0, -1);
-        isFirstZero = false;
-        isResultZero = false;
+
         nextAction = false;
     }
 
     static all() {
         expression = "";
         currentNum = "";
-        isFirstZero = false;
-        isResultZero = false;
-    UI.showExpression();
+        
+        UI.showExpression();
 }
 
 }
