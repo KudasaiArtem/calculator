@@ -13,11 +13,13 @@ const minus = document.querySelector("#minus");
 const plus = document.querySelector("#plus");
 const radical = document.querySelector("#radical");
 
+const point = document.querySelector("#point");
+
 // return
 const equals = document.querySelector("#equals");
 
 // result
-let expressionUI = document.querySelector("#expression");
+let expressionHTML = document.querySelector("#expression");
 
 
 let value;
@@ -29,6 +31,7 @@ numpad.forEach((number) => {
 })
 
 let expression = "";
+let expressionUI = "";
 let currentNum = "";
 let nextAction = false;
 
@@ -66,117 +69,124 @@ class MATH {
     static currentNum(number) {
         nextAction = false;
 
+        let isIncludePoint = currentNum.includes(".");
+
         if (number == "0") {
             currentNum += number;
             expression += number;
             // isFirstZero = true;
 
-        } else if (number != "0") {
+        } else if (number != "0" || isIncludePoint) {
             isFirstZero = currentNum.slice(0, 1) === "0";
             currentNum += number;
             console.log("isFirstZero", isFirstZero);
 
-            if (isFirstZero === true) {
+            if (isFirstZero === true && !isIncludePoint) {
                 expression = expression.slice(0, -1) + number;
                 currentNum = number;
                 isFirstZero = false;
-                console.log(isFirstZero);
 
-            } else if (isFirstZero === false) {
+            } else if (isFirstZero === false || isIncludePoint) {
                 expression += number;
             } 
         }
 
-
-        // if (isFirstZero !== "0" && isResultZero != "0") {
-        //     expression += number;
-
-        // } else if (isResultZero == "0") {
-        //     expression = number;
-        //     isResultZero = expression;
-        // }
-
-        // console.log("Приклад", expression);
-        // console.log("currentNum = ", currentNum);
+        console.log(currentNum);
     }
 
-    // static currentNum(number) {
-    //     nextAction = false;
-        
-    //     // Додаємо число до поточного числа
-    //     currentNum += number;
-    
-    //     // Отримуємо перший символ поточного числа
-    //     const isFirstZero = currentNum.charAt(0);
-    
-    //     // Перевіряємо чи є перший символ нулем
-    //     if (isFirstZero === "0") {
-    //         if (number !== "0") {
-    //             // Заміна початкового нуля на нове число
-    //             expression = number;
-    //         }
-    //         // Якщо число 0 і перший символ 0, додаємо 0 до числа
-    //         else {
-    //             expression += number;
-    //         }
-    //     } else {
-    //         // Додаємо нове число до виразу
-    //         expression += number;
+    static point() {
+        let isIncludePoint = currentNum.includes(".");
+        let isLastNum = false;
+        console.log(isLastNum);
+
+        if (expression) {
+            isLastNum = !isNaN(expression.slice(-1));
+        }
+
+        if (!isIncludePoint && isLastNum) {
+            currentNum += ".";
+            expression += ".";
+        }
+    }
+
+    static percent() {
+        let isIncludePercent = currentNum.includes("%");
+        let isLastNum = false;
+        console.log(isLastNum);
+
+        if (expression) {
+            isLastNum = !isNaN(expression.slice(-1));
+        }
+
+        if (!isIncludePercent && isLastNum) {
+            currentNum += "%";
+            expression += "%";
+        }
+    }
+
+    static action(operator) {
+        if (expression) {
+            if (nextAction) {
+                expression = expression.slice(0, -1);
+            }
+            expression += operator;
+        }
+
+        nextAction = true;
+        currentNum = "";
+    }
+
+    // static plus() {
+    //     if (nextAction === false) {
+    //         expression += "+";
+    //     } else if (nextAction) {
+    //         expression = expression.slice(0, -1);
+    //         expression += "+";
     //     }
+
+    //     nextAction = true;
+    //     currentNum = "";
     // }
 
-    static plus() {
-        if (nextAction === false) {
-            expression += "+";
-        } else if (nextAction) {
-            expression = expression.slice(0, -1);
-            expression += "+";
-        }
+    // static minus() {
+    //     let isMinus = expression.slice(-1);
 
-        nextAction = true;
-        currentNum = "";
-    }
+    //     if (isMinus != "-") {
+    //         expression += "-";
+    //     } else if (nextAction) {
+    //         expression = expression.slice(0, -1);
+    //         expression += "-";
+    //     }
 
-    static minus() {
-        let isMinus = expression.slice(-1);
+    //     nextAction = true;
+    //     currentNum = "";
+    // }
 
-        if (isMinus != "-") {
-            expression += "-";
-        } else if (nextAction) {
-            expression = expression.slice(0, -1);
-            expression += "-";
-        }
+    // static multiply() {
+    //     if (nextAction === false) {
+    //         expression += "*";
+    //     } else if (nextAction) {
+    //         expression = expression.slice(0, -1);
+    //         expression += "*";
+    //     }
 
-        nextAction = true;
-        currentNum = "";
-    }
+    //     nextAction = true;
+    //     currentNum = "";
+    // }
 
-    static multiply() {
-        if (nextAction === false) {
-            expression += "*";
-        } else if (nextAction) {
-            expression = expression.slice(0, -1);
-            expression += "*";
-        }
+    // static divide() {
+    //     if (nextAction === false) {
+    //         expression += "/";
+    //     } else if (nextAction) {
+    //         expression = expression.slice(0, -1);
+    //         expression += "/";
+    //     }
 
-        nextAction = true;
-        currentNum = "";
-    }
-
-    static divide() {
-        if (nextAction === false) {
-            expression += "/";
-        } else if (nextAction) {
-            expression = expression.slice(0, -1);
-            expression += "/";
-        }
-
-        nextAction = true;
-        currentNum = "";
-    }
+    //     nextAction = true;
+    //     currentNum = "";
+    // }
 
     static radical() {
-        console.log("поточний номер", currentNum);
         if (currentNum >= 0) {
             nextAction = false;
 
@@ -186,31 +196,26 @@ class MATH {
 
             expression += parseFloat(radical);
             currentNum = `${radical}`;
-            console.log(currentNum);
-
-            console.log(expression);
-            console.log(radical);
         }
     }
     
 
     static equals() {
-        let result = eval(expression);
-        // expression = "";
-        expression = `${result}`;
-        currentNum = `${result}`;
+        if (expression) {
+            expression = expression.replace(/\%/g, "/100");
 
-        switch (result) {
-            case 0:
+            console.log(expression);
+            let result = eval(expression);
+            // expression = "";
+            expression = `${result}`;
+            currentNum = `${result}`;
+    
+            if (result === 0) {
                 isFirstZero = true;
-                break;
-        
-            default:
+            } else {
                 isFirstZero = false;
-                break;
+            }
         }
-
-        console.log(result);
     }
 }
 
@@ -226,41 +231,39 @@ class CLEAR {
         expression = "";
         currentNum = "";
         
-        UI.showExpression();
+        renderUI();
 }
 
 }
 
-class UI {
-    static showExpression() {
+function renderUI() {
         let replaced = expression.replace(/\*/g, " x ")
                                 .replace(/\//g, " : ")
                                 .replace(/\+/g, " + ")
                                 .replace(/\-/g, " - ");
 
-        expressionUI.innerHTML = `<span>${replaced}</span>`;
+        expressionHTML.innerHTML = `<span>${replaced}</span>`;
     }
-
-    static cleanUp() {
-
-    }
-}
 
 // events
 plus.addEventListener("click", () => {
-    MATH.plus();
+    // MATH.plus();
+    MATH.action("+");
 })
 
 minus.addEventListener("click", () => {
-    MATH.minus();
+    // MATH.minus();
+    MATH.action("-");
 })
 
 multiply.addEventListener("click", () => {
-    MATH.multiply();
+    // MATH.multiply();
+    MATH.action("*");
 })
 
 divide.addEventListener("click", () => {
-    MATH.divide();
+    // MATH.divide();
+    MATH.action("/");
 })
 
 radical.addEventListener("click", () => {
@@ -282,5 +285,13 @@ backspace.addEventListener("click", () => {
 })
 
 btnBlock.addEventListener("click", () => {
-    UI.showExpression();
+    renderUI();
+})
+
+point.addEventListener("click", () => {
+    MATH.point();
+})
+
+percent.addEventListener("click", () => {
+    MATH.percent();
 })
