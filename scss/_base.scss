@@ -9,15 +9,23 @@
     color: $white;
 }
 
+body {
+    background-color: $white;
+}
+
 .container {
     margin: 0 auto;
     max-width: 720px;
     width: 100%;
+    height: 100vh;
     background-color: $gray;
+    overflow: hidden;
+    touch-action: none;
 }
 
 .content {
     padding: 24px 16px;
+    
 }
 
 #expression {
@@ -29,7 +37,7 @@
     justify-content: flex-end;
     overflow: hidden;
 
-    filter: drop-shadow(0px 4px 2px #585858);
+    box-shadow:  0 4px 6px #585858;
     
     span {
         font-size: 54px;
@@ -39,7 +47,7 @@
 
 .button_block {
     display: grid;
-    gap: 16px;
+    gap: 2vw;
     padding: 24px;
 
     justify-content: center;
@@ -50,7 +58,7 @@
     button {
         background-color: $secondary;
         border-radius: 50%;
-        padding: 16px;
+        //padding: 1rem;
         border: 0;
         display: flex;
         justify-content: center;
@@ -59,7 +67,7 @@
         font-size: 2rem;
         transition: 0.1s ease-in-out;
 
-        filter: drop-shadow(0px 4px 2px #585858);
+        box-shadow:  0 4px 6px #585858;
 
         -webkit-touch-callout: none; /* Заборона контекстного меню при триманні дотику */
         -webkit-user-select: none; /* Заборона вибору користувачем тексту */
@@ -81,4 +89,13 @@
 
 object {
     pointer-events: none;
+}
+
+@media screen and (max-width: 524px) {
+    .button_block {
+        padding: 18px 0;
+
+        grid-template-columns: repeat(4, $grid-btn-sizeLower);
+        grid-template-rows: repeat(5, $grid-btn-sizeLower);
+    }
 }

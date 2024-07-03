@@ -79,7 +79,6 @@ class MATH {
         } else if (number != "0" || isIncludePoint) {
             isFirstZero = currentNum.slice(0, 1) === "0";
             currentNum += number;
-            console.log("isFirstZero", isFirstZero);
 
             if (isFirstZero === true && !isIncludePoint) {
                 expression = expression.slice(0, -1) + number;
@@ -237,10 +236,10 @@ class CLEAR {
 }
 
 function renderUI() {
-        let replaced = expression.replace(/\*/g, " x ")
-                                .replace(/\//g, " : ")
+        let replaced = expression.replace(/\*/g, " × ")
+                                .replace(/\//g, " ÷ ")
                                 .replace(/\+/g, " + ")
-                                .replace(/\-/g, " - ");
+                                .replace(/\-/g, " − ");
 
         expressionHTML.innerHTML = `<span>${replaced}</span>`;
     }
